@@ -13,7 +13,7 @@
 #include <wx/sizer.h>
 #include <wx/frame.h>
 #include <wx/dirdlg.h>
-class MainWindow : public wxFrame
+class MainWindow : public wxPanel
 {
 
 public:

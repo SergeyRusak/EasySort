@@ -1,10 +1,11 @@
 #include <wx/wxprec.h>
 #include <wx/wx.h>
-#include "MainWindow.h"
+#include "Mainframe.h"
 class Main : public wxApp
 {
 public:
     virtual bool OnInit();
+    wxFrame* frame;
 };
 enum
 {
@@ -14,7 +15,10 @@ wxIMPLEMENT_APP(Main);
 
 bool Main::OnInit()
 {
-    MainWindow* frame = new MainWindow();
+    frame = new MainFrame();
     frame->Show(true);
     return true;
 }
+
+
+
