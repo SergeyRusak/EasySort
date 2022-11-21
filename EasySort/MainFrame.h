@@ -19,7 +19,11 @@
 #include <wx/combobox.h>
 #include <wx/statbmp.h>
 #include <wx/gauge.h>
+#include <wx/progdlg.h>
 #include <wx/frame.h>
+
+
+#include "Controller.h"
 class MainFrame : public wxFrame
 {
 private:
@@ -58,7 +62,7 @@ protected:
 	wxPanel* Progress_panel;
 	wxStaticBitmap* p_status_bitmap;
 	wxStaticText* m_staticText9;
-	wxGauge* p_progress;
+	//wxGauge* p_progress;
 	wxButton* p_abort_btn;
 
 
@@ -75,5 +79,7 @@ public:
 	void OnApplyBTNClick(wxCommandEvent& event);
 	void OnCancelBTNClick(wxCommandEvent& event);
 	void OnAbortBTNClick(wxCommandEvent& event);
+
+	void ChangePanel(wxPanel* current, wxPanel* next);
 
 };

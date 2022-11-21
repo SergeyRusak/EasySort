@@ -2,9 +2,7 @@
 
 
 MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort files", wxDefaultPosition, wxSize(640, 360))
-{
-	{ 
-		  
+{ 
 		this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 		panels = new wxBoxSizer(wxVERTICAL);
 		#pragma region MainWindow
@@ -212,13 +210,12 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 
 
 		p_prog_sizer->Add(0, 0, 1, 0, 5);
-
-		//p_progress = new wxGauge(Progress_panel,wxID_ANY,100,wxDefaultPosition,wxDefaultSize,wxGA_PROGRESS);
+		//wxPanel* pp = new wxPanel(Progress_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+		//p_progress = new wxGauge(pp, wxID_ANY, 100, wxDefaultPosition, wxDefaultSize);
 		//p_progress->SetValue(0);
-		//p_prog_sizer->Add(p_progress, 3, wxALIGN_CENTER_HORIZONTAL | wxALL, 5);
-
-
-		p_prog_sizer->Add(0, 0, 1, 0, 5);
+		//p_prog_sizer->Add(pp, 1, wxALIGN_CENTER_HORIZONTAL, 5);
+		//procdiag = new wxProgressDialog(wxString(""), wxString(""), 100, this);
+		//p_prog_sizer->Add(0, 0, 1);
 
 
 		p_vbox->Add(p_prog_sizer, 0, wxEXPAND, 5);
@@ -238,7 +235,6 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 
 		this->SetSizer(panels);
 		this->Layout();
-
 		this->Centre(wxBOTH);
 
 		#pragma region ViewEvents
@@ -249,14 +245,11 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		s_cancel_btn->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnCancelBTNClick, this);
 		p_abort_btn->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnAbortBTNClick, this);
 		#pragma endregion
-
-	}
-
 }
 MainFrame::~MainFrame()
 {
 
-#pragma region ViewEvents
+		#pragma region ViewEventsUnbind
 	m_option_btn1->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnOptionBTNClick, this);
 	m_start_sort_btn->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnStartSortBTNClick, this);
 	s_ok_btn->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnOkBTNClick, this);
@@ -271,54 +264,42 @@ MainFrame::~MainFrame()
 
 void MainFrame::OnOptionBTNClick(wxCommandEvent& event)
 {
-	panels->Detach(0); // remove previous panel
-	Main_panel->Hide();
-	panels->Prepend(Settings_panel, 1, wxGROW);
-	Settings_panel->Show();
-	panels->Layout();
-
+	ChangePanel(Main_panel, Settings_panel);
 }
 
 void MainFrame::OnStartSortBTNClick(wxCommandEvent& event)
 {
-	panels->Detach(0);
-	Main_panel->Hide();
-	panels->Prepend(Progress_panel, 1, wxGROW);
-	Progress_panel->Show();
-	panels->Layout();
+	Controller::ShowFiles(this);
+	ChangePanel(Main_panel, Progress_panel);
+	
 }
 
 void MainFrame::OnOkBTNClick(wxCommandEvent& event)
 {
-	panels->Detach(0);
-	Settings_panel->Hide();
-	panels->Prepend(Main_panel, 1, wxGROW);
-	Main_panel->Show();
-	panels->Layout();
+	ChangePanel(Settings_panel, Main_panel);
 }
 
 void MainFrame::OnApplyBTNClick(wxCommandEvent& event)
 {
 
-
-
 }
 
 void MainFrame::OnCancelBTNClick(wxCommandEvent& event)
 {
-	panels->Detach(0);
-	Settings_panel->Hide();
-	panels->Prepend(Main_panel, 1, wxGROW);
-	Main_panel->Show();
-	panels->Layout();
+	ChangePanel(Settings_panel, Main_panel);
 }
 
 void MainFrame::OnAbortBTNClick(wxCommandEvent& event)
 {
-	panels->Detach(0);
-	Progress_panel->Hide();
-	panels->Prepend(Main_panel, 1, wxGROW);
-	Main_panel->Show();
-	panels->Layout();
+
+	ChangePanel(Progress_panel, Main_panel);	
+}
+void MainFrame::ChangePanel(wxPanel* current, wxPanel* next) {
 	
+	panels->Detach(0);
+	current->Hide();
+	panels->Prepend(next, 1, wxGROW);
+	next->Show();
+	panels->Layout();
+
 }
