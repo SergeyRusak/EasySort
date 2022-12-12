@@ -1,7 +1,7 @@
 #include <wx/wxprec.h>
 #include <wx/wx.h>
 
-#include "Core.h"
+
 #include "Mainframe.h"
 
 #define wxUSE_STD_IOSTREAM 1

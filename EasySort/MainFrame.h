@@ -21,6 +21,7 @@
 #include <wx/gauge.h>
 #include <wx/progdlg.h>
 #include <wx/frame.h>
+#include <wx/clrpicker.h>
 
 
 #include "Controller.h"
@@ -52,25 +53,26 @@ protected:
 	wxStaticText* m_staticText23;
 	wxStaticText* m_staticText11;
 	wxSpinCtrl* m_spinCtrl1;
-	wxComboBox* m_comboBox1;
+	wxChoice* m_comboBox1;
 	wxStaticText* m_staticText111;
 	wxSpinCtrl* m_spinCtrl11;
-	wxComboBox* m_comboBox11;
+	wxChoice* m_comboBox11;
 	wxButton* s_ok_btn;
 	wxButton* s_apply_btn;
 	wxButton* s_cancel_btn;
 	wxPanel* Progress_panel;
 	wxStaticBitmap* p_status_bitmap;
 	wxStaticText* m_staticText9;
-	//wxGauge* p_progress;
+	wxGauge* p_progress;
 	wxButton* p_abort_btn;
+	wxColourPickerCtrl* m_color_pctr;
 
 
 
 public:
 
 	MainFrame();
-
+	void Update_frame();
 	~MainFrame();
 
 	void OnOptionBTNClick(wxCommandEvent& event);

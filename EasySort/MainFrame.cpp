@@ -3,11 +3,23 @@
 
 MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort files", wxDefaultPosition, wxSize(640, 360))
 { 
+
+
+		Controller::init();
+
+		wxArrayString times;
+		times.Add("День");
+		times.Add("Неделя");
+		times.Add("Месяц");
+		times.Add("Год");
+
+
+
 		this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 		panels = new wxBoxSizer(wxVERTICAL);
 		#pragma region MainWindow
 		Main_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(640, 360), wxTAB_TRAVERSAL);
-		Main_panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT));
+		Main_panel->SetBackgroundColour(Settings::bg_color);
 
 		wxBoxSizer* m_hbox;
 		m_hbox = new wxBoxSizer(wxHORIZONTAL);
@@ -90,6 +102,17 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 
 
 		s_settings_sizer->Add(bSizer11, 1, wxEXPAND, 5);
+		wxBoxSizer* bSizer11300;
+		bSizer11300 = new wxBoxSizer(wxHORIZONTAL);
+
+		m_staticText11 = new wxStaticText(Settings_panel, wxID_ANY, wxT("Background color"), wxDefaultPosition, wxDefaultSize, 0);
+		m_staticText11->Wrap(-1);
+		bSizer11300->Add(m_staticText11, 0, wxALL, 5);
+
+		m_color_pctr = new wxColourPickerCtrl(Settings_panel, wxID_ANY, Settings::bg_color, wxDefaultPosition, wxDefaultSize, wxCLRP_SHOW_LABEL,wxDefaultValidator,wxColourPickerCtrlNameStr);
+		bSizer11300->Add(m_color_pctr, 0, wxALL, 5);
+
+		s_settings_sizer->Add(bSizer11300, 1, wxEXPAND, 5);
 
 		wxBoxSizer* bSizer111;
 		bSizer111 = new wxBoxSizer(wxHORIZONTAL);
@@ -140,9 +163,10 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		m_spinCtrl1 = new wxSpinCtrl(Settings_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 0);
 		bSizer1131->Add(m_spinCtrl1, 0, wxALL, 5);
 
-		m_comboBox1 = new wxComboBox(Settings_panel, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0);
+		m_comboBox1 = new wxChoice(Settings_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, times );
+		m_comboBox1->SetSelection(0);
 		bSizer1131->Add(m_comboBox1, 0, wxALL, 5);
-
+		
 
 		s_settings_sizer->Add(bSizer1131, 1, wxEXPAND, 5);
 
@@ -156,7 +180,8 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		m_spinCtrl11 = new wxSpinCtrl(Settings_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 0);
 		bSizer11311->Add(m_spinCtrl11, 0, wxALL, 5);
 
-		m_comboBox11 = new wxComboBox(Settings_panel, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0);
+		m_comboBox11 = new wxChoice(Settings_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, times);
+		m_comboBox11->SetSelection(0);
 		bSizer11311->Add(m_comboBox11, 0, wxALL, 5);
 
 
@@ -246,9 +271,14 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		p_abort_btn->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnAbortBTNClick, this);
 		#pragma endregion
 }
+void MainFrame::Update_frame()
+{
+	Main_panel->SetBackgroundColour(Settings::bg_color);
+
+}
 MainFrame::~MainFrame()
 {
-
+	Controller::close();
 		#pragma region ViewEventsUnbind
 	m_option_btn1->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnOptionBTNClick, this);
 	m_start_sort_btn->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnStartSortBTNClick, this);
@@ -269,24 +299,30 @@ void MainFrame::OnOptionBTNClick(wxCommandEvent& event)
 
 void MainFrame::OnStartSortBTNClick(wxCommandEvent& event)
 {
-	Controller::ShowFiles(this);
+	Controller::SortFiles(this);
 	ChangePanel(Main_panel, Progress_panel);
 	
 }
 
 void MainFrame::OnOkBTNClick(wxCommandEvent& event)
 {
+	int settings[] = { m_spinCtrl11->GetValue(),m_comboBox11->GetSelection(),m_spinCtrl1->GetValue(),m_comboBox1->GetSelection(),m_color_pctr->GetColour().GetRGB() };
+	Controller::SaveSettings(this, settings);
+	Update_frame();
 	ChangePanel(Settings_panel, Main_panel);
 }
 
 void MainFrame::OnApplyBTNClick(wxCommandEvent& event)
 {
-
+	int settings[] = { m_spinCtrl11->GetValue(),m_comboBox11->GetSelection(),m_spinCtrl1->GetValue(),m_comboBox1->GetSelection(),m_color_pctr->GetColour().GetRGB() };
+	Controller::SaveSettings(this, settings);
 }
 
 void MainFrame::OnCancelBTNClick(wxCommandEvent& event)
 {
+	Update_frame();
 	ChangePanel(Settings_panel, Main_panel);
+	
 }
 
 void MainFrame::OnAbortBTNClick(wxCommandEvent& event)
