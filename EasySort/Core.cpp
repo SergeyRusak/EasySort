@@ -16,8 +16,8 @@ int Core::move(std::filesystem::path origin, std::filesystem::path destination, 
             int i = 0;
             while (std::filesystem::exists(destination.parent_path().string() +
                 "\\" +
-                destination.stem().string() +
-                "(" + std::to_string(i) + ")" +
+                destination.stem().string() + ((i > 0) ? (
+                    "(" + std::to_string(i) + ")") : ("")) +
                 destination.extension().string())) {
                 i++;
             }
@@ -38,19 +38,20 @@ int Core::move(std::filesystem::path origin, std::filesystem::path destination, 
     return 0;
 }
 
-std::vector<wxString> Core::getFiles(std::string path,int& files_count, bool recursive)
+wxArrayString Core::getFiles(std::string path, bool recursive)
 {
-    std::vector<wxString> files;
-    files_count = 0;
+    wxArrayString files;
     try {
         for (const auto& entry : std::filesystem::directory_iterator(path)) {
             if (recursive && entry.is_directory()) {
-                std::vector<wxString> temp = Core::getFiles(entry.path().string(),files_count, recursive);
-                files.insert(files.end(), temp.begin(), temp.end());
+                wxArrayString temp = Core::getFiles(entry.path().string(), recursive);
+                for (int i = 0; i < temp.size(); i++)
+                {
+                    files.Add(temp[i]);
+                }
             }
             if (entry.is_regular_file()) {
-                files.push_back(entry.path().string());
-                files_count++;
+                files.Add(entry.path().string());
             }
 
         }
@@ -91,8 +92,5 @@ std::string Core::sort(std::filesystem::path file, std::string startDir)
      result += file.extension().string().substr(1)
        + "\\"
        + file.filename().string();
-    std::stringstream ss;
-    ss << (curr_time - buff.st_mtime);
-    wxLogMessage(wxString(ss.str()));
     return  result;
 }

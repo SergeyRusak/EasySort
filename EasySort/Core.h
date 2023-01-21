@@ -11,7 +11,7 @@ class Core
 public:
 	static int move(std::filesystem::path origin, std::filesystem::path destination, bool overwrite);
 
-	static std::vector<wxString> getFiles(std::string path, int& files_count, bool recursive);
+	static wxArrayString getFiles(std::string path, bool recursive);
 
 	static int createDir(std::filesystem::path path);
 

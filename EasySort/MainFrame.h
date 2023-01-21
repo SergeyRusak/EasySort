@@ -22,14 +22,17 @@
 #include <wx/progdlg.h>
 #include <wx/frame.h>
 #include <wx/clrpicker.h>
+#include <wx/listbox.h>
 
 
 #include "Controller.h"
 class MainFrame : public wxFrame
 {
 private:
-
+	wxString selectedDir;
 protected:
+
+
 
 
 	wxBoxSizer* panels;
@@ -66,6 +69,13 @@ protected:
 	wxGauge* p_progress;
 	wxButton* p_abort_btn;
 	wxColourPickerCtrl* m_color_pctr;
+	wxPanel* Select_panel;
+	wxListBox* sl_m_listBox1;
+	wxStaticText* sl_ftext;
+	wxButton* sl_start_btn;
+	wxButton* sl_cancel_btn;
+	wxButton* sl_sall_btn;
+	wxButton* sl_snone_btn;
 
 
 
@@ -81,6 +91,10 @@ public:
 	void OnApplyBTNClick(wxCommandEvent& event);
 	void OnCancelBTNClick(wxCommandEvent& event);
 	void OnAbortBTNClick(wxCommandEvent& event);
+	void OnSAllBTNClick(wxCommandEvent& event);
+	void OnSNoneBTNClick(wxCommandEvent& event);
+	void OnSstartBTNClick(wxCommandEvent& event);
+	void OnScancelBTNClick(wxCommandEvent& event);
 
 	void ChangePanel(wxPanel* current, wxPanel* next);
 
