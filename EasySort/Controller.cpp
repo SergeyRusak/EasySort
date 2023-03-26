@@ -1,14 +1,14 @@
 #include "Controller.h"
-
-void Controller::init()
+Controller::Controller()
 {
 	Settings::load();
+	core = new Core();
 
 }
 
-void Controller::close()
+Controller::~Controller()
 {
-Settings::save();
+	Settings::save();
 }
 
 void Controller::ShowFiles(wxWindow* frame)
@@ -18,7 +18,7 @@ void Controller::ShowFiles(wxWindow* frame)
 	{
 		wxString selectedDir = dirDialog->GetPath();
 		int files_count(0);
-		wxArrayString files = Core::getFiles(selectedDir.ToStdString(), true);
+		wxArrayString files = core->getFiles(selectedDir.ToStdString(), true);
 		wxString text("Found files:"+std::to_string(files.size()));
 		wxMessageDialog* i = new wxMessageDialog(frame, text);
 		i->ShowModal();
@@ -27,6 +27,7 @@ void Controller::ShowFiles(wxWindow* frame)
 
 wxArrayString Controller::FileSearch(wxWindow* frame)
 {
+	wxArrayString files = wxArrayString();
 	wxDirDialog* dirDialog = new wxDirDialog(frame);
 	if (dirDialog->ShowModal() == wxID_OK)
 	{
@@ -35,12 +36,13 @@ wxArrayString Controller::FileSearch(wxWindow* frame)
 		wxMessageDialog* dorecursive = new wxMessageDialog(frame, wxT("Обработать файлы в папках, которые лежат внутри папки по пути (" + selectedDir + ")?"), "Анализировать файлы внутри папок?", wxYES_NO | wxCENTER | wxNO_DEFAULT | wxICON_QUESTION);
 
 		bool recursive = dorecursive->ShowModal() == wxID_YES;
-
-
-		wxArrayString files = Core::getFiles(selectedDir.ToStdString(), recursive);
+		files = core->getFiles(selectedDir.ToStdString(), recursive);
 		files.Add(selectedDir);
-		return files;
 	}
+	else {
+		files.Add("null");
+	}
+	return files;
 }
 
 void Controller::SortFiles(wxArrayString* files, wxString selectedDir, wxGauge* progress){
@@ -52,9 +54,9 @@ void Controller::SortFiles(wxArrayString* files, wxString selectedDir, wxGauge* 
 			progress->SetValue(j);
 			std::filesystem::path temp(files->Item(j).ToStdString());
 			
-			std::filesystem::path destinate = Core::sort(temp, selectedDir.ToStdString());
-			Core::createDir(destinate);
-			Core::move(temp, destinate, false);
+			std::filesystem::path destinate = core->sort(temp, selectedDir);
+			core->createDir(destinate);
+			core->move(temp, destinate, false);
 
 
 		}

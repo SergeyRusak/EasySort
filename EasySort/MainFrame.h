@@ -23,20 +23,21 @@
 #include <wx/frame.h>
 #include <wx/clrpicker.h>
 #include <wx/listbox.h>
-
-
+#include "wxSPanel.h"
 #include "Controller.h"
 class MainFrame : public wxFrame
 {
 private:
 	wxString selectedDir;
+	int items;
+	Controller* controller;
 protected:
 
 
 
 
 	wxBoxSizer* panels;
-	wxPanel* Main_panel;
+	wxSPanel* Main_panel;
 	wxButton* m_option_btn1;
 	wxButton* m_option_btn11;
 	wxButton* m_option_btn12;
@@ -44,7 +45,7 @@ protected:
 	wxButton* m_option_btn14;
 	wxButton* m_option_btn15;
 	wxButton* m_start_sort_btn;
-	wxPanel* Settings_panel;
+	wxSPanel* Settings_panel;
 	wxStaticText* m_staticText8;
 	wxRadioButton* m_radioBtn2;
 	wxStaticText* m_staticText2;
@@ -63,13 +64,13 @@ protected:
 	wxButton* s_ok_btn;
 	wxButton* s_apply_btn;
 	wxButton* s_cancel_btn;
-	wxPanel* Progress_panel;
+	wxSPanel* Progress_panel;
 	wxStaticBitmap* p_status_bitmap;
 	wxStaticText* m_staticText9;
 	wxGauge* p_progress;
 	wxButton* p_abort_btn;
 	wxColourPickerCtrl* m_color_pctr;
-	wxPanel* Select_panel;
+	wxSPanel* Select_panel;
 	wxListBox* sl_m_listBox1;
 	wxStaticText* sl_ftext;
 	wxButton* sl_start_btn;
@@ -95,7 +96,8 @@ public:
 	void OnSNoneBTNClick(wxCommandEvent& event);
 	void OnSstartBTNClick(wxCommandEvent& event);
 	void OnScancelBTNClick(wxCommandEvent& event);
+	void OnListItemClick(wxCommandEvent& event);
 
 	void ChangePanel(wxPanel* current, wxPanel* next);
-
+	void Update_text_select();
 };

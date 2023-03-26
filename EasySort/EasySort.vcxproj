@@ -24,15 +24,26 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="SortComposition.cpp" />
+    <ClCompile Include="SortCompositor.cpp" />
+    <ClCompile Include="SortExtensionCompositor.cpp" />
+    <ClCompile Include="wxSPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Settings.h" />
+    <ClInclude Include="SortComposition.h" />
+    <ClInclude Include="SortCompositor.h" />
+    <ClInclude Include="SortExtensionCompositor.h" />
+    <ClInclude Include="wxSPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bg.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

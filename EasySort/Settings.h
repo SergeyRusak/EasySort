@@ -2,6 +2,7 @@
 #include <wx/colour.h>
 #include <json.hpp>
 #include <fstream>
+#include <wx/gdicmn.h>
 
 
 //static enum TIME
@@ -34,10 +35,13 @@ public:
 	static int last_access_to_archive_mod;
 	static int last_modify_to_archive_mod;
 	static int create_to_archive_mod;
+	
+	
 
 
 	static void load();
 	static void save();
 
 };
+
 static const int All[] = { Settings::TIME::DAY,Settings::TIME::WEEK,Settings::TIME::MONTH,Settings::TIME::YEAR };

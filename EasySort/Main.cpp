@@ -2,7 +2,7 @@
 #include <wx/wx.h>
 
 
-#include "Mainframe.h"
+#include "MainFrame.h"
 
 #define wxUSE_STD_IOSTREAM 1
 
@@ -23,7 +23,6 @@ wxIMPLEMENT_APP(Main);
 
 bool Main::OnInit()
 {
-    wxLogMessage(wxT("Запуск приложения..."));
     frame = new MainFrame();
     frame->Show(true);
     return true;

@@ -1,11 +1,12 @@
 #include "MainFrame.h"
 
 
-MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort files", wxDefaultPosition, wxSize(640, 360))
+MainFrame::MainFrame() : wxFrame()
 { 
-		
-
-		Controller::init();
+		controller = new Controller();
+		int window_w, window_h;
+		wxDisplaySize(&window_w, &window_h);
+		Create(NULL, wxID_ANY, "Easy Sort - programm for sort files", wxDefaultPosition,wxSize(window_w/2, window_h/2));
 
 		wxArrayString times;
 		times.Add("День");
@@ -14,12 +15,15 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		times.Add("Год");
 
 
-
 		this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 		panels = new wxBoxSizer(wxVERTICAL);
 		#pragma region MainWindow
-		Main_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(640, 360), wxTAB_TRAVERSAL);
-		Main_panel->SetBackgroundColour(Settings::bg_color);
+		Main_panel = new wxSPanel();
+		
+
+
+		Main_panel->Create(this, wxID_ANY, wxDefaultPosition, GetSize(), wxTAB_TRAVERSAL);
+		
 
 		wxBoxSizer* m_hbox;
 		m_hbox = new wxBoxSizer(wxHORIZONTAL);
@@ -77,7 +81,8 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		panels->Add(Main_panel, 1, wxEXPAND | wxALL, 5);
 		#pragma endregion
 		#pragma region SettingsWindow
-		Settings_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(640, 360), wxTAB_TRAVERSAL);
+		Settings_panel = new wxSPanel();
+		Settings_panel->Create(this, wxID_ANY, wxDefaultPosition, GetSize(), wxTAB_TRAVERSAL);
 
 		wxBoxSizer* s_vbox;
 		s_vbox = new wxBoxSizer(wxVERTICAL);
@@ -213,7 +218,8 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		Settings_panel->Hide();
 #pragma endregion
 		#pragma region Progress_panel
-		Progress_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(640, 360), wxTAB_TRAVERSAL);
+		Progress_panel = new wxSPanel();
+		Progress_panel->Create(this, wxID_ANY, wxDefaultPosition, GetSize(), wxTAB_TRAVERSAL);
 
 		wxBoxSizer* p_vbox;
 		p_vbox = new wxBoxSizer(wxVERTICAL);
@@ -258,7 +264,8 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		Progress_panel->Hide();
 		#pragma endregion
 		#pragma region SelectionWindow
-		Select_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(640, 360), wxTAB_TRAVERSAL);
+		Select_panel = new wxSPanel();
+		Select_panel->Create(this, wxID_ANY, wxDefaultPosition, GetSize(), wxTAB_TRAVERSAL);
 		Select_panel->SetBackgroundColour(Settings::bg_color);
 
 		wxBoxSizer* sl_bSizer1;
@@ -268,20 +275,20 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		sl_bSizer2 = new wxBoxSizer(wxHORIZONTAL);
 
 
-		sl_bSizer2->Add(0, 0, 1, wxEXPAND, 5);
-
+		wxBoxSizer* sl_bSizer21 = new wxBoxSizer(wxVERTICAL);
 		sl_m_listBox1 = new wxListBox(Select_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_ALWAYS_SB | wxLB_MULTIPLE);
-		sl_bSizer2->Add(sl_m_listBox1, 20, wxEXPAND);
+		sl_bSizer21->Add(sl_m_listBox1, 1, wxEXPAND);
+		sl_ftext = new wxStaticText(Select_panel, wxID_ANY, wxT("Files selected 0 from 100"), wxDefaultPosition, wxDefaultSize, 0);
+		sl_ftext->Wrap(-1);
+		sl_bSizer21->Add(sl_ftext, 0, wxALIGN_LEFT, 0);
+		sl_bSizer2->Add(sl_bSizer21, 20, wxRIGHT | wxLEFT| wxEXPAND, 15);
 
 
-		sl_bSizer2->Add(0, 0, 1, wxEXPAND, 5);
 
 
 		sl_bSizer1->Add(sl_bSizer2, 5, wxEXPAND | wxTOP, 5);
 
-		sl_ftext = new wxStaticText(Select_panel, wxID_ANY, wxT("Files selected 0 from 100"), wxDefaultPosition, wxDefaultSize, 0);
-		sl_ftext->Wrap(-1);
-		sl_bSizer1->Add(sl_ftext, 0, wxALIGN_RIGHT | wxALL | wxRIGHT, 5);
+		
 
 		wxBoxSizer* sl_bSizer4;
 		sl_bSizer4 = new wxBoxSizer(wxHORIZONTAL);
@@ -310,6 +317,7 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		this->SetSizer(panels);
 		this->Layout();
 		this->Centre(wxBOTH);
+		Update_frame();
 
 		#pragma region ViewEvents
 		m_option_btn1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnOptionBTNClick,this);
@@ -320,7 +328,8 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 		s_cancel_btn->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnCancelBTNClick, this);
 
 		p_abort_btn->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnAbortBTNClick, this);
-
+		
+		sl_m_listBox1->Bind(wxEVT_LISTBOX, &MainFrame::OnListItemClick, this);
 		sl_sall_btn->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnSAllBTNClick, this);
 		sl_snone_btn->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnSNoneBTNClick, this);
 		sl_start_btn->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnSstartBTNClick, this);
@@ -329,12 +338,31 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, "Easy Sort - programm for sort 
 }
 void MainFrame::Update_frame()
 {
-	Main_panel->SetBackgroundColour(Settings::bg_color);
+	wxImage bg = wxImage();
+	bg.AddHandler(new wxPNGHandler);
+	bg.LoadFile(wxString("bg.png"), wxBITMAP_TYPE_PNG);
+	int w, h;
+	this->GetSize(&w, &h);
+	bg.Rescale(w, h, wxIMAGE_QUALITY_BICUBIC);
+	if (!bg.HasAlpha()) bg.InitAlpha();
+	for (int yi = 0; yi < h; yi++)
+	{
+		for (int xi = 0; xi < w; xi++) {
+
+			int r = bg.GetRed(xi, yi);
+			int g = bg.GetGreen(xi, yi);
+			int b = bg.GetBlue(xi, yi);
+			bg.SetAlpha(xi, yi, (r + g + b) / 3);
+			bg.SetRGB(xi, yi, Settings::bg_color.Red(), Settings::bg_color.Green(), Settings::bg_color.Blue());
+
+		}
+	}
+	Main_panel->SetBackgroundBitmap(wxBitmap(bg));
 
 }
 MainFrame::~MainFrame()
 {
-	Controller::close();
+	controller->~Controller();
 		#pragma region ViewEventsUnbind
 	m_option_btn1->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnOptionBTNClick, this);
 	m_start_sort_btn->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &MainFrame::OnStartSortBTNClick, this);
@@ -355,25 +383,27 @@ void MainFrame::OnOptionBTNClick(wxCommandEvent& event)
 }
 void MainFrame::OnStartSortBTNClick(wxCommandEvent& event)
 {
-	wxArrayString files = Controller::FileSearch(this);
+	wxArrayString files = controller->FileSearch(this);
 	selectedDir = files.Last();
+	items = 0;
 	files.RemoveAt(files.GetCount() - 1);
 	ChangePanel(Main_panel, Select_panel);
 	sl_m_listBox1->Append(files);
+	Update_text_select();
 	
 }
 
 void MainFrame::OnOkBTNClick(wxCommandEvent& event)
 {
 	int settings[] = { m_spinCtrl11->GetValue(),m_comboBox11->GetSelection(),m_spinCtrl1->GetValue(),m_comboBox1->GetSelection(),m_color_pctr->GetColour().GetRGB() };
-	Controller::SaveSettings(this, settings);
+	controller->SaveSettings(this, settings);
 	Update_frame();
 	ChangePanel(Settings_panel, Main_panel);
 }
 void MainFrame::OnApplyBTNClick(wxCommandEvent& event)
 {
 	int settings[] = { m_spinCtrl11->GetValue(),m_comboBox11->GetSelection(),m_spinCtrl1->GetValue(),m_comboBox1->GetSelection(),m_color_pctr->GetColour().GetRGB() };
-	Controller::SaveSettings(this, settings);
+	controller->SaveSettings(this, settings);
 }
 void MainFrame::OnCancelBTNClick(wxCommandEvent& event)
 {
@@ -394,6 +424,8 @@ void MainFrame::OnSAllBTNClick(wxCommandEvent& event)
 	for (int i = 0; i < elems; i++) {
 		sl_m_listBox1->Select(i);
 	}
+	items = sl_m_listBox1->GetCount();
+	Update_text_select();
 }
 void MainFrame::OnSNoneBTNClick(wxCommandEvent& event)
 {
@@ -401,6 +433,8 @@ void MainFrame::OnSNoneBTNClick(wxCommandEvent& event)
 	for (int i = 0; i < elems; i++) {
 		sl_m_listBox1->Deselect(i);
 	}
+	items = 0;
+	Update_text_select();
 }
 void MainFrame::OnSstartBTNClick(wxCommandEvent& event)
 {
@@ -409,14 +443,23 @@ void MainFrame::OnSstartBTNClick(wxCommandEvent& event)
 		if (sl_m_listBox1->IsSelected(i)) files.Add(sl_m_listBox1->GetString(i));
 	}
 	ChangePanel(Select_panel, Progress_panel);
-	Controller::SortFiles(&files, selectedDir, p_progress);
+	sl_m_listBox1->Clear();
+	controller->SortFiles(&files, selectedDir, p_progress);
 	wxMessageDialog* doneModal = new wxMessageDialog(this, wxT("Файлы отсортированны!"), "Готово");
 	doneModal->ShowModal();
 	ChangePanel(Progress_panel, Main_panel);
 }
 void MainFrame::OnScancelBTNClick(wxCommandEvent& event)
 {
+	sl_m_listBox1->Clear();
 	ChangePanel(Select_panel, Main_panel);
+}
+
+void MainFrame::OnListItemClick(wxCommandEvent& event)
+{
+	items += (event.IsSelection()) ? (1) : (-1);
+	Update_text_select();
+
 }
 
 void MainFrame::ChangePanel(wxPanel* current, wxPanel* next) {
@@ -427,4 +470,9 @@ void MainFrame::ChangePanel(wxPanel* current, wxPanel* next) {
 	next->Show();
 	panels->Layout();
 
+}
+
+void MainFrame::Update_text_select()
+{
+	sl_ftext->SetLabel(wxString("Files selected " + std::to_string(items) + " from " + std::to_string(sl_m_listBox1->GetCount())));
 }

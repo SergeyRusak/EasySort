@@ -24,6 +24,7 @@ void Settings::load()
 		last_modify_to_archive_mod = WEEK;
 		create_to_archive_mod = MONTH;
 	}
+
 	
 }
 

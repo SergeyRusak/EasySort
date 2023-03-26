@@ -8,14 +8,14 @@
 class Controller
 {
 public:
-	static void init();
-	static void close();
-	static void ShowFiles(wxWindow* frame);
-	static wxArrayString FileSearch(wxWindow* frame);
-
-	static void SortFiles(wxArrayString* files, wxString selectedDir, wxGauge* progress);
-
-	static void SaveSettings(wxWindow* frame, int* settings);
+	Core* core;
+	Controller();
+	~Controller();
+	wxString selectedDir;
+	void ShowFiles(wxWindow* frame);
+	wxArrayString FileSearch(wxWindow* frame);
+	void SortFiles(wxArrayString* files, wxString selectedDir, wxGauge* progress);
+	void SaveSettings(wxWindow* frame, int* settings);
 
 
 

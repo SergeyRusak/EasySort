@@ -1,6 +1,4 @@
-
 #include "Core.h"
-#include <wx/log.h>
 
 
 
@@ -75,22 +73,13 @@ int Core::createDir(std::filesystem::path path)
     return 0;
 }
 
-std::string Core::sort(std::filesystem::path file, std::string startDir)
+std::string Core::sort(std::filesystem::path file, wxString startDir)
 {
-    struct stat buff;
-    time_t curr_time;
-    curr_time = time(NULL);
-    stat(file.string().c_str(),&buff);
-    std::string result = startDir + "\\";
-    if ((curr_time - buff.st_mtime) >= Settings::last_modify_to_archive_count * Settings::last_modify_to_archive_mod) {
-        result += "Archived\\";
-    }
-    else {
-        result += "Sorted\\";
-    
-    }
-     result += file.extension().string().substr(1)
-       + "\\"
-       + file.filename().string();
-    return  result;
+    return (startDir + std::filesystem::path::preferred_separator + sortSystem->Sort(file) + std::filesystem::path::preferred_separator + file.filename().string()).ToStdString();
+}
+
+Core::Core()
+{
+    Core::sortSystem = new SortComposition();
+
 }
